@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 )
 
-const FILE_NAME string = "input.txt"
+const DAY_ONE string = "day_one.txt"
 
 func main() {
-	fmt.Print(getMaxConsumer())
-
+	fmt.Println(getMostConsumer())
 }
 
 func readFile(path string) (*bufio.Scanner, *os.File) {
@@ -24,22 +24,19 @@ func readFile(path string) (*bufio.Scanner, *os.File) {
 	return bufio.NewScanner(file), file
 }
 
-func getMaxConsumer() int {
-	var res int = 0
+// day one
+func getMostConsumer() []int {
 	var count int = 0
-	var scanner, file = readFile(FILE_NAME)
+	var elves []int
+	var scanner, file = readFile(DAY_ONE)
 
 	for scanner.Scan() {
 		var parsed, err = strconv.Atoi(scanner.Text())
 		count += parsed
 
 		if err != nil {
-			if res < count {
-				res = count
-				count = 0
-			} else {
-				count = 0
-			}
+			elves = append(elves, count)
+			count = 0
 		}
 
 	}
@@ -48,7 +45,9 @@ func getMaxConsumer() int {
 		log.Fatal(err)
 	}
 
+	sort.Ints(elves)
+
 	defer file.Close()
 
-	return res
+	return elves
 }
